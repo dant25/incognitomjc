@@ -113,6 +113,7 @@ void FormalList():
 { }
 {
 	Type() <ID> (FormalRest())*
+|	{}
 }
 
 void FormalRest():
@@ -155,32 +156,25 @@ void Op():
 void Exp():
 { }
 {
-	Term() ExpPrime() Fat()
-	
-
-}
-
-void Fat():
-{}
-{
-	<LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
-|	<DOT> <LENGTH>
-|	<ID> Explist()
-|
-}
-
-void Fat2():
-{}
-{
-	<INT> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
-|	<ID> <L_PARENTHESIS> <R_PARENTHESIS>
+	Term() ExpPrime()
+|	<EXCLAMATION> Exp()
+|	<L_PARENTHESIS> Exp() <R_PARENTHESIS>
 }
 
 void ExpPrime():
 {}
 {
 	Op() Term() ExpPrime()
-|	
+|	<LSQUAREBRACKET> Term() ExpPrime() <RSQUAREBRACKET> ExpPrime()
+|	<DOT> Fat()
+|	{}
+}
+
+void Fat():
+{}
+{
+	<LENGTH> ExpPrime()
+|	<ID> <L_PARENTHESIS> Explist() <R_PARENTHESIS> ExpPrime()
 }
 
 void Term():
@@ -192,17 +186,21 @@ void Term():
 |	<ID>
 |	<THIS>
 |	<NEW> Fat2()
-|	<EXCLAMATION> Exp()
-|	<L_PARENTHESIS> Exp() <R_PARENTHESIS>
-
 }
 
+void Fat2():
+{}
+{
+	<INT> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
+|	<ID> <L_PARENTHESIS> <R_PARENTHESIS>
+}
 
 
 void Explist():
 { }
 {
 	Exp() (Exprest())*
+|	{}
 }
 
 void Exprest():
@@ -223,6 +221,5 @@ void parseNextToken():
 |   t=<ELSE> { System.out.print("ELSE "); } ( parseNextToken())
 |   t=<PUBLIC> { System.out.print("PUBLIC "); } ( parseNextToken())
 |   { System.exit(-1); }
-  
 }
 

@@ -9,6 +9,418 @@ public class Incognito implements IncognitoConstants {
         }
     }
 
+  static final public void MainClass() throws ParseException {
+    jj_consume_token(CLASS);
+    jj_consume_token(ID);
+    jj_consume_token(LCURLYBRACE);
+    jj_consume_token(MAIN);
+    jj_consume_token(L_PARENTHESIS);
+    jj_consume_token(STRING_ARRAY);
+    jj_consume_token(ID);
+    jj_consume_token(R_PARENTHESIS);
+    jj_consume_token(LCURLYBRACE);
+    Statement();
+    jj_consume_token(RCURLYBRACE);
+    jj_consume_token(RCURLYBRACE);
+  }
+
+  static final public void ClassDecl() throws ParseException {
+    jj_consume_token(CLASS);
+    jj_consume_token(ID);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EXTENDS:
+      jj_consume_token(EXTENDS);
+      jj_consume_token(ID);
+      break;
+    default:
+      jj_la1[0] = jj_gen;
+      ;
+    }
+    jj_consume_token(LCURLYBRACE);
+    label_1:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case BOOLEAN:
+      case INT:
+      case INT_ARRAY:
+      case ID:
+        ;
+        break;
+      default:
+        jj_la1[1] = jj_gen;
+        break label_1;
+      }
+      VarDecl();
+    }
+    label_2:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PUBLIC:
+        ;
+        break;
+      default:
+        jj_la1[2] = jj_gen;
+        break label_2;
+      }
+      MethodDecl();
+    }
+    jj_consume_token(RCURLYBRACE);
+  }
+
+  static final public void VarDecl() throws ParseException {
+    Type();
+    jj_consume_token(ID);
+    jj_consume_token(SEMICOLON);
+  }
+
+  static final public void MethodDecl() throws ParseException {
+    jj_consume_token(PUBLIC);
+    Type();
+    jj_consume_token(ID);
+    jj_consume_token(L_PARENTHESIS);
+    FormalList();
+    jj_consume_token(R_PARENTHESIS);
+    jj_consume_token(LCURLYBRACE);
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case BOOLEAN:
+      case INT:
+      case INT_ARRAY:
+      case ID:
+        ;
+        break;
+      default:
+        jj_la1[3] = jj_gen;
+        break label_3;
+      }
+      VarDecl();
+    }
+    label_4:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IF:
+      case WHILE:
+      case PRINT:
+      case LCURLYBRACE:
+      case ID:
+        ;
+        break;
+      default:
+        jj_la1[4] = jj_gen;
+        break label_4;
+      }
+      Statement();
+    }
+    jj_consume_token(RETURN);
+    Exp();
+    jj_consume_token(SEMICOLON);
+    jj_consume_token(RCURLYBRACE);
+  }
+
+  static final public void FormalList() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case BOOLEAN:
+    case INT:
+    case INT_ARRAY:
+    case ID:
+      Type();
+      jj_consume_token(ID);
+      label_5:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[5] = jj_gen;
+          break label_5;
+        }
+        FormalRest();
+      }
+      break;
+    default:
+      jj_la1[6] = jj_gen;
+
+    }
+  }
+
+  static final public void FormalRest() throws ParseException {
+    jj_consume_token(COMMA);
+    Type();
+    jj_consume_token(ID);
+  }
+
+  static final public void Type() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INT_ARRAY:
+      jj_consume_token(INT_ARRAY);
+      break;
+    case BOOLEAN:
+      jj_consume_token(BOOLEAN);
+      break;
+    case INT:
+      jj_consume_token(INT);
+      break;
+    case ID:
+      jj_consume_token(ID);
+      break;
+    default:
+      jj_la1[7] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Statement() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case LCURLYBRACE:
+      jj_consume_token(LCURLYBRACE);
+      label_6:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case IF:
+        case WHILE:
+        case PRINT:
+        case LCURLYBRACE:
+        case ID:
+          ;
+          break;
+        default:
+          jj_la1[8] = jj_gen;
+          break label_6;
+        }
+        Statement();
+      }
+      jj_consume_token(RCURLYBRACE);
+      break;
+    case IF:
+      jj_consume_token(IF);
+      jj_consume_token(L_PARENTHESIS);
+      Exp();
+      jj_consume_token(R_PARENTHESIS);
+      Statement();
+      jj_consume_token(ELSE);
+      Statement();
+      break;
+    case WHILE:
+      jj_consume_token(WHILE);
+      jj_consume_token(L_PARENTHESIS);
+      Exp();
+      jj_consume_token(R_PARENTHESIS);
+      Statement();
+      break;
+    case PRINT:
+      jj_consume_token(PRINT);
+      jj_consume_token(L_PARENTHESIS);
+      Exp();
+      jj_consume_token(R_PARENTHESIS);
+      Statement();
+      jj_consume_token(SEMICOLON);
+      break;
+    case ID:
+      jj_consume_token(ID);
+      jj_consume_token(ASSIGNEQUAL);
+      Exp();
+      jj_consume_token(SEMICOLON);
+      break;
+      jj_consume_token(ID);
+      jj_consume_token(LSQUAREBRACKET);
+      Exp();
+      jj_consume_token(RSQUAREBRACKET);
+      jj_consume_token(ASSIGNEQUAL);
+      Exp();
+      jj_consume_token(SEMICOLON);
+      break;
+    default:
+      jj_la1[9] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Op() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case AND:
+      jj_consume_token(AND);
+      break;
+    case LESS_THAN:
+      jj_consume_token(LESS_THAN);
+      break;
+    case PLUS:
+      jj_consume_token(PLUS);
+      break;
+    case MINUS:
+      jj_consume_token(MINUS);
+      break;
+    case STAR:
+      jj_consume_token(STAR);
+      break;
+    default:
+      jj_la1[10] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Exp() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case NEW:
+    case THIS:
+    case TRUE:
+    case FALSE:
+    case INTEGER_LITERAL:
+    case ID:
+      Term();
+      ExpPrime();
+      break;
+    case EXCLAMATION:
+      jj_consume_token(EXCLAMATION);
+      Exp();
+      break;
+    case L_PARENTHESIS:
+      jj_consume_token(L_PARENTHESIS);
+      Exp();
+      jj_consume_token(R_PARENTHESIS);
+      break;
+    default:
+      jj_la1[11] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void ExpPrime() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case AND:
+    case LESS_THAN:
+    case PLUS:
+    case MINUS:
+    case STAR:
+      Op();
+      Term();
+      ExpPrime();
+      break;
+    case LSQUAREBRACKET:
+      jj_consume_token(LSQUAREBRACKET);
+      Term();
+      ExpPrime();
+      jj_consume_token(RSQUAREBRACKET);
+      ExpPrime();
+      break;
+    case DOT:
+      jj_consume_token(DOT);
+      Fat();
+      break;
+    default:
+      jj_la1[12] = jj_gen;
+
+    }
+  }
+
+  static final public void Fat() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case LENGTH:
+      jj_consume_token(LENGTH);
+      ExpPrime();
+      break;
+    case ID:
+      jj_consume_token(ID);
+      jj_consume_token(L_PARENTHESIS);
+      Explist();
+      jj_consume_token(R_PARENTHESIS);
+      ExpPrime();
+      break;
+    default:
+      jj_la1[13] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Term() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INTEGER_LITERAL:
+      jj_consume_token(INTEGER_LITERAL);
+      break;
+    case TRUE:
+      jj_consume_token(TRUE);
+      break;
+    case FALSE:
+      jj_consume_token(FALSE);
+      break;
+    case ID:
+      jj_consume_token(ID);
+      break;
+    case THIS:
+      jj_consume_token(THIS);
+      break;
+    case NEW:
+      jj_consume_token(NEW);
+      Fat2();
+      break;
+    default:
+      jj_la1[14] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Fat2() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INT:
+      jj_consume_token(INT);
+      jj_consume_token(LSQUAREBRACKET);
+      Exp();
+      jj_consume_token(RSQUAREBRACKET);
+      break;
+    case ID:
+      jj_consume_token(ID);
+      jj_consume_token(L_PARENTHESIS);
+      jj_consume_token(R_PARENTHESIS);
+      break;
+    default:
+      jj_la1[15] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Explist() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case NEW:
+    case THIS:
+    case TRUE:
+    case FALSE:
+    case EXCLAMATION:
+    case L_PARENTHESIS:
+    case INTEGER_LITERAL:
+    case ID:
+      Exp();
+      label_7:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[16] = jj_gen;
+          break label_7;
+        }
+        Exprest();
+      }
+      break;
+    default:
+      jj_la1[17] = jj_gen;
+
+    }
+  }
+
+  static final public void Exprest() throws ParseException {
+    jj_consume_token(COMMA);
+    Exp();
+  }
+
   static final public void parseNextToken() throws ParseException {
     Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -28,7 +440,7 @@ public class Incognito implements IncognitoConstants {
       parseNextToken();
       break;
     default:
-      jj_la1[0] = jj_gen;
+      jj_la1[18] = jj_gen;
       System.exit(-1);
     }
   }
@@ -43,7 +455,7 @@ public class Incognito implements IncognitoConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[1];
+  static final private int[] jj_la1 = new int[19];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -51,10 +463,10 @@ public class Incognito implements IncognitoConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x160,};
+      jj_la1_0 = new int[] {0x800,0x860000,0x100,0x860000,0x40020a0,0x80000000,0x860000,0x860000,0x40020a0,0x40020a0,0x0,0x1398000,0x10000000,0x4000,0x198000,0x40000,0x80000000,0x1398000,0x160,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,};
+      jj_la1_1 = new int[] {0x0,0x100,0x0,0x100,0x100,0x0,0x100,0x100,0x100,0x100,0x3e,0x180,0x3f,0x100,0x180,0x100,0x0,0x180,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -75,7 +487,7 @@ public class Incognito implements IncognitoConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -89,7 +501,7 @@ public class Incognito implements IncognitoConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -106,7 +518,7 @@ public class Incognito implements IncognitoConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -116,7 +528,7 @@ public class Incognito implements IncognitoConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -132,7 +544,7 @@ public class Incognito implements IncognitoConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -141,7 +553,7 @@ public class Incognito implements IncognitoConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -192,12 +604,12 @@ public class Incognito implements IncognitoConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[39];
+    boolean[] la1tokens = new boolean[42];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 19; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -209,7 +621,7 @@ public class Incognito implements IncognitoConstants {
         }
       }
     }
-    for (int i = 0; i < 39; i++) {
+    for (int i = 0; i < 42; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
