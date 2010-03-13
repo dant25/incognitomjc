@@ -142,27 +142,62 @@ void Statement():
 |	<ID> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET> <ASSIGNEQUAL> Exp() <SEMICOLON>
 }
 
+void Op():
+{}
+{
+	<AND>
+|	<LESS_THAN>
+|	<PLUS>
+|	<MINUS>
+|	<STAR>
+}
+
 void Exp():
 { }
 {
-	Exp() <AND> Exp()
-|	Exp() <LESS_THAN> Exp()
-|	Exp() <PLUS> Exp()
-|	Exp() <MINUS> Exp()
-|	Exp() <STAR> Exp()
-|	Exp() <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
-|	Exp() <DOT> <LENGTH>
-|	Exp() <ID> Explist()
-|	<INTEGER_LITERAL>
+	Term() ExpPrime() Fat()
+	
+
+}
+
+void Fat():
+{}
+{
+	<LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
+|	<DOT> <LENGTH>
+|	<ID> Explist()
+|
+}
+
+void Fat2():
+{}
+{
+	<INT> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
+|	<ID> <L_PARENTHESIS> <R_PARENTHESIS>
+}
+
+void ExpPrime():
+{}
+{
+	Op() Term() ExpPrime()
+|	
+}
+
+void Term():
+{}
+{
+	<INTEGER_LITERAL>
 |	<TRUE>
 |	<FALSE>
 |	<ID>
 |	<THIS>
-|	<NEW> <INT> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
-|	<NEW> <ID> <L_PARENTHESIS> <R_PARENTHESIS>
+|	<NEW> Fat2()
 |	<EXCLAMATION> Exp()
 |	<L_PARENTHESIS> Exp() <R_PARENTHESIS>
+
 }
+
+
 
 void Explist():
 { }
