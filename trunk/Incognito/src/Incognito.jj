@@ -1,8 +1,8 @@
 
 options {
-  BUILD_PARSER = true;
-  BUILD_TOKEN_MANAGER = true;
-
+	BUILD_PARSER = true;
+	BUILD_TOKEN_MANAGER = true;
+	LOOKAHEAD=2;
 }
 
 PARSER_BEGIN(Incognito)
@@ -11,11 +11,29 @@ public class Incognito
 {
     public static void main(String args[]) throws ParseException
     {
-        Incognito parser = new Incognito(System.in);
-        while (true)
-        {
-            parser.parseNextToken();
-        }
+		Incognito parser;
+
+		if (args.length == 0){
+			System.out.println("Incognito: No input file.");
+		}
+		else if (args.length == 1) {
+			System.out.println("Incognito: Reading from file " + args[0] + " ...");
+			try {
+				parser = new Incognito(new java.io.FileInputStream(args[0]));
+			}
+			catch (java.io.FileNotFoundException e) {
+				System.out.println("Incognito: File " + args[0] + " not found.");
+				return;
+			}
+		}
+
+		try {
+			parser.Goal();
+		 	System.out.println("Incognito: MiniJava program parsed successfully.");
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Incognito: Encountered errors during parse.");
+		}
     }
 }
 
@@ -72,8 +90,14 @@ TOKEN:
 
 
 |   < INTEGER_LITERAL: (<DIGIT>)+ >
-|   < ID: ["a"-"z"] (["a"-"z"]|<DIGIT>) >
+|   < ID: (["a"-"z"] | "_" | ["A"-"Z"]) (["a"-"z"]|<DIGIT>|"_"|["A"-"Z"])* >
 |   < DIGIT: ["0"-"9"] >
+}
+
+void Goal():
+{}
+{
+	MainClass() (ClassDecl())* <EOF>
 }
 
 void MainClass():
@@ -219,18 +243,4 @@ void Exprest():
 { }
 {
     <COMMA> Exp()
-}
-
-
-
-
-void parseNextToken():
-{
-    Token t;
-}
-{
-    t=<IF> { System.out.print("IF "); } ( parseNextToken())	
-|   t=<ELSE> { System.out.print("ELSE "); } ( parseNextToken())
-|   t=<PUBLIC> { System.out.print("PUBLIC "); } ( parseNextToken())
-|   { System.exit(-1); }
 }
