@@ -11,7 +11,7 @@ public class Incognito
 {
     public static void main(String args[]) throws ParseException
     {
-		Incognito parser;
+		Incognito parser = null;
 
 		if (args.length == 0){
 			System.out.println("Incognito: No input file.");
@@ -45,6 +45,12 @@ SKIP :
 | "\t"
 | "\r"
 | "\n"
+}
+
+SPECIAL_TOKEN : /* COMMENTS */
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
 }
 
 TOKEN:
@@ -101,7 +107,7 @@ void Goal():
 }
 
 void MainClass():
-{ }
+{}
 {
 	<CLASS> <ID> <LCURLYBRACE>
 		<MAIN> <L_PARENTHESIS>
@@ -115,7 +121,7 @@ void MainClass():
 }
 
 void ClassDecl():
-{ }
+{}
 {
 <CLASS> <ID> (<EXTENDS> <ID>)? <LCURLYBRACE>
 		( VarDecl() )*
@@ -124,13 +130,13 @@ void ClassDecl():
 }
 
 void VarDecl():
-{ }
+{}
 {
 	Type() <ID> <SEMICOLON>
 }
 
 void MethodDecl():
-{ }
+{}
 {
 	<PUBLIC> Type() <ID>  <L_PARENTHESIS>
 		FormalList()		
@@ -140,20 +146,20 @@ void MethodDecl():
 }
 
 void FormalList():
-{ }
+{}
 {
 	Type() <ID> (FormalRest())*
 |	{}
 }
 
 void FormalRest():
-{ }
+{}
 {
 	<COMMA> Type() <ID>
 }
 
 void Type():
-{ }
+{}
 {
 	<INT_ARRAY>
 |	<BOOLEAN>
@@ -163,57 +169,59 @@ void Type():
 
 
 void Statement():
-{ }
+{}
 {
 	<LCURLYBRACE> (Statement())* <RCURLYBRACE>
 |	<IF> <L_PARENTHESIS> Exp() <R_PARENTHESIS> Statement() <ELSE> Statement()
 |	<WHILE> <L_PARENTHESIS> Exp() <R_PARENTHESIS> Statement()
-|	<PRINT> <L_PARENTHESIS> Exp() <R_PARENTHESIS> Statement() <SEMICOLON>
-|	<ID> StatementFat()
-}
-
-void StatementFat():
-{}
-{
-	<ASSIGNEQUAL> Exp() <SEMICOLON>
-|	<LSQUAREBRACKET> Exp() <RSQUAREBRACKET> <ASSIGNEQUAL> Exp() <SEMICOLON>
-}
-
-void Op():
-{}
-{
-	<AND>
-|	<LESS_THAN>
-|	<PLUS>
-|	<MINUS>
-|	<STAR>
+|	<PRINT> <L_PARENTHESIS> Exp() <R_PARENTHESIS> <SEMICOLON>
+|	<ID> (<LSQUAREBRACKET> Exp() <RSQUAREBRACKET>)? <ASSIGNEQUAL> Exp() <SEMICOLON>
 }
 
 void Exp():
-{ }
+{}
 {
 	Term() ExpPrime()
-|	<EXCLAMATION> Exp()
-|	<L_PARENTHESIS> Exp() <R_PARENTHESIS>
 }
 
 void ExpPrime():
 {}
 {
-	Op() Term() ExpPrime()
-|	<LSQUAREBRACKET> Term() ExpPrime() <RSQUAREBRACKET> ExpPrime()
-|	<DOT> Fat()
+	<PLUS> Term() ExpPrime()
+|	<MINUS> Term() ExpPrime()
+|	{}
+}
+
+void Term():
+{}
+{
+	Term2() TermPrime()
+}
+
+void TermPrime():
+{}
+{
+	<STAR> Term2() TermPrime()
+|	{}
+}
+
+void Term2():
+{}
+{
+	Fat() Term2Prime()
+}
+
+void Term2Prime():
+{}
+{
+	<AND> Fat() Term2Prime()
+|	<LESS_THAN> Fat() Term2Prime()
+|	<DOT> Fat2()
+|	<LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
 |	{}
 }
 
 void Fat():
-{}
-{
-	<LENGTH> ExpPrime()
-|	<ID> <L_PARENTHESIS> Explist() <R_PARENTHESIS> ExpPrime()
-}
-
-void Term():
 {}
 {
 	<INTEGER_LITERAL>
@@ -221,26 +229,34 @@ void Term():
 |	<FALSE>
 |	<ID>
 |	<THIS>
-|	<NEW> Fat2()
+|	<EXCLAMATION> Exp()
+|	<L_PARENTHESIS> Exp() <R_PARENTHESIS>
+|	<NEW> Fat3()
 }
 
 void Fat2():
+{}
+{
+	<LENGTH>
+|	<ID> <L_PARENTHESIS> ExpList() <R_PARENTHESIS>
+}
+
+void Fat3():
 {}
 {
 	<INT> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
 |	<ID> <L_PARENTHESIS> <R_PARENTHESIS>
 }
 
-
-void Explist():
-{ }
+void ExpList():
+{}
 {
-	Exp() (Exprest())*
+	Exp() (ExpRest())*
 |	{}
 }
 
-void Exprest():
-{ }
+void ExpRest():
+{}
 {
     <COMMA> Exp()
 }
