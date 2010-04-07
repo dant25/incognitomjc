@@ -11,79 +11,83 @@ public interface IncognitoConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int IF = 5;
+  int SINGLE_LINE_COMMENT = 5;
   /** RegularExpression Id. */
-  int ELSE = 6;
+  int MULTI_LINE_COMMENT = 6;
   /** RegularExpression Id. */
-  int WHILE = 7;
+  int IF = 7;
   /** RegularExpression Id. */
-  int PUBLIC = 8;
+  int ELSE = 8;
   /** RegularExpression Id. */
-  int MAIN = 9;
+  int WHILE = 9;
   /** RegularExpression Id. */
-  int CLASS = 10;
+  int PUBLIC = 10;
   /** RegularExpression Id. */
-  int EXTENDS = 11;
+  int MAIN = 11;
   /** RegularExpression Id. */
-  int RETURN = 12;
+  int CLASS = 12;
   /** RegularExpression Id. */
-  int PRINT = 13;
+  int EXTENDS = 13;
   /** RegularExpression Id. */
-  int LENGTH = 14;
+  int RETURN = 14;
   /** RegularExpression Id. */
-  int NEW = 15;
+  int PRINT = 15;
   /** RegularExpression Id. */
-  int THIS = 16;
+  int LENGTH = 16;
   /** RegularExpression Id. */
-  int BOOLEAN = 17;
+  int NEW = 17;
   /** RegularExpression Id. */
-  int INT = 18;
+  int THIS = 18;
   /** RegularExpression Id. */
-  int TRUE = 19;
+  int BOOLEAN = 19;
   /** RegularExpression Id. */
-  int FALSE = 20;
+  int INT = 20;
   /** RegularExpression Id. */
-  int EXCLAMATION = 21;
+  int TRUE = 21;
   /** RegularExpression Id. */
-  int STRING_ARRAY = 22;
+  int FALSE = 22;
   /** RegularExpression Id. */
-  int INT_ARRAY = 23;
+  int EXCLAMATION = 23;
   /** RegularExpression Id. */
-  int L_PARENTHESIS = 24;
+  int STRING_ARRAY = 24;
   /** RegularExpression Id. */
-  int R_PARENTHESIS = 25;
+  int INT_ARRAY = 25;
   /** RegularExpression Id. */
-  int LCURLYBRACE = 26;
+  int L_PARENTHESIS = 26;
   /** RegularExpression Id. */
-  int RCURLYBRACE = 27;
+  int R_PARENTHESIS = 27;
   /** RegularExpression Id. */
-  int LSQUAREBRACKET = 28;
+  int LCURLYBRACE = 28;
   /** RegularExpression Id. */
-  int RSQUAREBRACKET = 29;
+  int RCURLYBRACE = 29;
   /** RegularExpression Id. */
-  int SEMICOLON = 30;
+  int LSQUAREBRACKET = 30;
   /** RegularExpression Id. */
-  int COMMA = 31;
+  int RSQUAREBRACKET = 31;
   /** RegularExpression Id. */
-  int DOT = 32;
+  int SEMICOLON = 32;
   /** RegularExpression Id. */
-  int AND = 33;
+  int COMMA = 33;
   /** RegularExpression Id. */
-  int LESS_THAN = 34;
+  int DOT = 34;
   /** RegularExpression Id. */
-  int PLUS = 35;
+  int AND = 35;
   /** RegularExpression Id. */
-  int MINUS = 36;
+  int LESS_THAN = 36;
   /** RegularExpression Id. */
-  int STAR = 37;
+  int PLUS = 37;
   /** RegularExpression Id. */
-  int ASSIGNEQUAL = 38;
+  int MINUS = 38;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 39;
+  int STAR = 39;
   /** RegularExpression Id. */
-  int ID = 40;
+  int ASSIGNEQUAL = 40;
   /** RegularExpression Id. */
-  int DIGIT = 41;
+  int INTEGER_LITERAL = 41;
+  /** RegularExpression Id. */
+  int ID = 42;
+  /** RegularExpression Id. */
+  int DIGIT = 43;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -95,6 +99,8 @@ public interface IncognitoConstants {
     "\"\\t\"",
     "\"\\r\"",
     "\"\\n\"",
+    "<SINGLE_LINE_COMMENT>",
+    "<MULTI_LINE_COMMENT>",
     "\"if\"",
     "\"else\"",
     "\"while\"",

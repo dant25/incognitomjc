@@ -6,29 +6,29 @@ import Lexer.*;
 public class Incognito implements IncognitoConstants {
     public static void main(String args[]) throws ParseException
     {
-        Incognito parser = null;
+                Incognito parser = null;
 
-        if (args.length == 0){
-        	System.out.println("Incognito: No input file.");
-        }
-        else if (args.length == 1) {
-            System.out.println("Incognito: Reading from file " + args[0] + " ...");
-            try {
-            	parser = new Incognito(new java.io.FileInputStream(args[0]));
-            }
-            catch (java.io.FileNotFoundException e) {
-                System.out.println("Incognito: File " + args[0] + " not found.");
-                return;
-            }
-        }
+                if (args.length == 0){
+                        System.out.println("Incognito: No input file.");
+                }
+                else if (args.length == 1) {
+                        System.out.println("Incognito: Reading from file " + args[0] + " ...");
+                        try {
+                                parser = new Incognito(new java.io.FileInputStream(args[0]));
+                        }
+                        catch (java.io.FileNotFoundException e) {
+                                System.out.println("Incognito: File " + args[0] + " not found.");
+                                return;
+                        }
+                }
 
-        try {
-            parser.Goal();
-            System.out.println("Incognito: MiniJava program parsed successfully.");
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Incognito: Encountered errors during parse.");
-        }
+                try {
+                        parser.Goal();
+                        System.out.println("Incognito: MiniJava program parsed successfully.");
+                } catch (ParseException e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("Incognito: Encountered errors during parse.");
+                }
     }
 
   static final public void Goal() throws ParseException {
@@ -169,7 +169,7 @@ public class Incognito implements IncognitoConstants {
   }
 
   static final public void Statement() throws ParseException {
-    if (jj_2_14(2)) {
+    if (jj_2_15(2)) {
       jj_consume_token(LCURLYBRACE);
       label_7:
       while (true) {
@@ -181,7 +181,7 @@ public class Incognito implements IncognitoConstants {
         Statement();
       }
       jj_consume_token(RCURLYBRACE);
-    } else if (jj_2_15(2)) {
+    } else if (jj_2_16(2)) {
       jj_consume_token(IF);
       jj_consume_token(L_PARENTHESIS);
       Exp();
@@ -189,57 +189,30 @@ public class Incognito implements IncognitoConstants {
       Statement();
       jj_consume_token(ELSE);
       Statement();
-    } else if (jj_2_16(2)) {
+    } else if (jj_2_17(2)) {
       jj_consume_token(WHILE);
       jj_consume_token(L_PARENTHESIS);
       Exp();
       jj_consume_token(R_PARENTHESIS);
       Statement();
-    } else if (jj_2_17(2)) {
+    } else if (jj_2_18(2)) {
       jj_consume_token(PRINT);
       jj_consume_token(L_PARENTHESIS);
       Exp();
       jj_consume_token(R_PARENTHESIS);
-      Statement();
       jj_consume_token(SEMICOLON);
-    } else if (jj_2_18(2)) {
+    } else if (jj_2_19(2)) {
       jj_consume_token(ID);
-      StatementFat();
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  static final public void StatementFat() throws ParseException {
-    if (jj_2_19(2)) {
+      if (jj_2_14(2)) {
+        jj_consume_token(LSQUAREBRACKET);
+        Exp();
+        jj_consume_token(RSQUAREBRACKET);
+      } else {
+        ;
+      }
       jj_consume_token(ASSIGNEQUAL);
       Exp();
       jj_consume_token(SEMICOLON);
-    } else if (jj_2_20(2)) {
-      jj_consume_token(LSQUAREBRACKET);
-      Exp();
-      jj_consume_token(RSQUAREBRACKET);
-      jj_consume_token(ASSIGNEQUAL);
-      Exp();
-      jj_consume_token(SEMICOLON);
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  static final public void Op() throws ParseException {
-    if (jj_2_21(2)) {
-      jj_consume_token(AND);
-    } else if (jj_2_22(2)) {
-      jj_consume_token(LESS_THAN);
-    } else if (jj_2_23(2)) {
-      jj_consume_token(PLUS);
-    } else if (jj_2_24(2)) {
-      jj_consume_token(MINUS);
-    } else if (jj_2_25(2)) {
-      jj_consume_token(STAR);
     } else {
       jj_consume_token(-1);
       throw new ParseException();
@@ -247,71 +220,86 @@ public class Incognito implements IncognitoConstants {
   }
 
   static final public void Exp() throws ParseException {
-    if (jj_2_26(2)) {
-      Term();
-      ExpPrime();
-    } else if (jj_2_27(2)) {
-      jj_consume_token(EXCLAMATION);
-      Exp();
-    } else if (jj_2_28(2)) {
-      jj_consume_token(L_PARENTHESIS);
-      Exp();
-      jj_consume_token(R_PARENTHESIS);
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
+    Term();
+    ExpPrime();
   }
 
   static final public void ExpPrime() throws ParseException {
-    if (jj_2_29(2)) {
-      Op();
+    if (jj_2_20(2)) {
+      jj_consume_token(PLUS);
       Term();
       ExpPrime();
-    } else if (jj_2_30(2)) {
-      jj_consume_token(LSQUAREBRACKET);
+    } else if (jj_2_21(2)) {
+      jj_consume_token(MINUS);
       Term();
       ExpPrime();
-      jj_consume_token(RSQUAREBRACKET);
-      ExpPrime();
-    } else if (jj_2_31(2)) {
-      jj_consume_token(DOT);
+    } else {
+
+    }
+  }
+
+  static final public void Term() throws ParseException {
+    Term2();
+    TermPrime();
+  }
+
+  static final public void TermPrime() throws ParseException {
+    if (jj_2_22(2)) {
+      jj_consume_token(STAR);
+      Term2();
+      TermPrime();
+    } else {
+
+    }
+  }
+
+  static final public void Term2() throws ParseException {
+    Fat();
+    Term2Prime();
+  }
+
+  static final public void Term2Prime() throws ParseException {
+    if (jj_2_23(2)) {
+      jj_consume_token(AND);
       Fat();
+      Term2Prime();
+    } else if (jj_2_24(2)) {
+      jj_consume_token(LESS_THAN);
+      Fat();
+      Term2Prime();
+    } else if (jj_2_25(2)) {
+      jj_consume_token(DOT);
+      Fat2();
+    } else if (jj_2_26(2)) {
+      jj_consume_token(LSQUAREBRACKET);
+      Exp();
+      jj_consume_token(RSQUAREBRACKET);
     } else {
 
     }
   }
 
   static final public void Fat() throws ParseException {
-    if (jj_2_32(2)) {
-      jj_consume_token(LENGTH);
-      ExpPrime();
-    } else if (jj_2_33(2)) {
-      jj_consume_token(ID);
-      jj_consume_token(L_PARENTHESIS);
-      Explist();
-      jj_consume_token(R_PARENTHESIS);
-      ExpPrime();
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  static final public void Term() throws ParseException {
-    if (jj_2_34(2)) {
+    if (jj_2_27(2)) {
       jj_consume_token(INTEGER_LITERAL);
-    } else if (jj_2_35(2)) {
+    } else if (jj_2_28(2)) {
       jj_consume_token(TRUE);
-    } else if (jj_2_36(2)) {
+    } else if (jj_2_29(2)) {
       jj_consume_token(FALSE);
-    } else if (jj_2_37(2)) {
+    } else if (jj_2_30(2)) {
       jj_consume_token(ID);
-    } else if (jj_2_38(2)) {
+    } else if (jj_2_31(2)) {
       jj_consume_token(THIS);
-    } else if (jj_2_39(2)) {
+    } else if (jj_2_32(2)) {
+      jj_consume_token(EXCLAMATION);
+      Exp();
+    } else if (jj_2_33(2)) {
+      jj_consume_token(L_PARENTHESIS);
+      Exp();
+      jj_consume_token(R_PARENTHESIS);
+    } else if (jj_2_34(2)) {
       jj_consume_token(NEW);
-      Fat2();
+      Fat3();
     } else {
       jj_consume_token(-1);
       throw new ParseException();
@@ -319,12 +307,26 @@ public class Incognito implements IncognitoConstants {
   }
 
   static final public void Fat2() throws ParseException {
-    if (jj_2_40(2)) {
+    if (jj_2_35(2)) {
+      jj_consume_token(LENGTH);
+    } else if (jj_2_36(2)) {
+      jj_consume_token(ID);
+      jj_consume_token(L_PARENTHESIS);
+      ExpList();
+      jj_consume_token(R_PARENTHESIS);
+    } else {
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Fat3() throws ParseException {
+    if (jj_2_37(2)) {
       jj_consume_token(INT);
       jj_consume_token(LSQUAREBRACKET);
       Exp();
       jj_consume_token(RSQUAREBRACKET);
-    } else if (jj_2_41(2)) {
+    } else if (jj_2_38(2)) {
       jj_consume_token(ID);
       jj_consume_token(L_PARENTHESIS);
       jj_consume_token(R_PARENTHESIS);
@@ -334,24 +336,24 @@ public class Incognito implements IncognitoConstants {
     }
   }
 
-  static final public void Explist() throws ParseException {
-    if (jj_2_43(2)) {
+  static final public void ExpList() throws ParseException {
+    if (jj_2_40(2)) {
       Exp();
       label_8:
       while (true) {
-        if (jj_2_42(2)) {
+        if (jj_2_39(2)) {
           ;
         } else {
           break label_8;
         }
-        Exprest();
+        ExpRest();
       }
     } else {
 
     }
   }
 
-  static final public void Exprest() throws ParseException {
+  static final public void ExpRest() throws ParseException {
     jj_consume_token(COMMA);
     Exp();
   }
@@ -636,68 +638,28 @@ public class Incognito implements IncognitoConstants {
     finally { jj_save(39, xla); }
   }
 
-  static private boolean jj_2_41(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return !jj_3_41(); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(40, xla); }
-  }
-
-  static private boolean jj_2_42(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return !jj_3_42(); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(41, xla); }
-  }
-
-  static private boolean jj_2_43(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return !jj_3_43(); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(42, xla); }
-  }
-
-  static private boolean jj_3_20() {
-    if (jj_scan_token(LSQUAREBRACKET)) return true;
-    if (jj_3R_16()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_15() {
+  static private boolean jj_3_19() {
+    if (jj_scan_token(ID)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_19()) {
-    jj_scanpos = xsp;
-    if (jj_3_20()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3_19() {
+    if (jj_3_14()) jj_scanpos = xsp;
     if (jj_scan_token(ASSIGNEQUAL)) return true;
-    if (jj_3R_16()) return true;
     return false;
   }
 
   static private boolean jj_3_18() {
-    if (jj_scan_token(ID)) return true;
-    if (jj_3R_15()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_17() {
     if (jj_scan_token(PRINT)) return true;
     if (jj_scan_token(L_PARENTHESIS)) return true;
     return false;
   }
 
-  static private boolean jj_3_16() {
+  static private boolean jj_3_17() {
     if (jj_scan_token(WHILE)) return true;
     if (jj_scan_token(L_PARENTHESIS)) return true;
     return false;
   }
 
-  static private boolean jj_3_15() {
+  static private boolean jj_3_16() {
     if (jj_scan_token(IF)) return true;
     if (jj_scan_token(L_PARENTHESIS)) return true;
     return false;
@@ -706,15 +668,15 @@ public class Incognito implements IncognitoConstants {
   static private boolean jj_3R_12() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_14()) {
-    jj_scanpos = xsp;
     if (jj_3_15()) {
     jj_scanpos = xsp;
     if (jj_3_16()) {
     jj_scanpos = xsp;
     if (jj_3_17()) {
     jj_scanpos = xsp;
-    if (jj_3_18()) return true;
+    if (jj_3_18()) {
+    jj_scanpos = xsp;
+    if (jj_3_19()) return true;
     }
     }
     }
@@ -722,7 +684,7 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3_14() {
+  static private boolean jj_3_15() {
     if (jj_scan_token(LCURLYBRACE)) return true;
     Token xsp;
     while (true) {
@@ -735,6 +697,11 @@ public class Incognito implements IncognitoConstants {
 
   static private boolean jj_3_12() {
     if (jj_scan_token(ID)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_39() {
+    if (jj_3R_21()) return true;
     return false;
   }
 
@@ -779,14 +746,31 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
+  static private boolean jj_3R_21() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_40() {
+    if (jj_3R_15()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_39()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
   static private boolean jj_3R_13() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_14()) return true;
     return false;
   }
 
-  static private boolean jj_3_42() {
-    if (jj_3R_22()) return true;
+  static private boolean jj_3_38() {
+    if (jj_scan_token(ID)) return true;
+    if (jj_scan_token(L_PARENTHESIS)) return true;
     return false;
   }
 
@@ -795,9 +779,19 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3R_22() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_16()) return true;
+  static private boolean jj_3R_20() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_37()) {
+    jj_scanpos = xsp;
+    if (jj_3_38()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3_37() {
+    if (jj_scan_token(INT)) return true;
+    if (jj_scan_token(LSQUAREBRACKET)) return true;
     return false;
   }
 
@@ -807,29 +801,24 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3_43() {
-    if (jj_3R_16()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_42()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3_41() {
+  static private boolean jj_3_36() {
     if (jj_scan_token(ID)) return true;
     if (jj_scan_token(L_PARENTHESIS)) return true;
     return false;
   }
 
-  static private boolean jj_3R_21() {
+  static private boolean jj_3R_19() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_40()) {
+    if (jj_3_35()) {
     jj_scanpos = xsp;
-    if (jj_3_41()) return true;
+    if (jj_3_36()) return true;
     }
+    return false;
+  }
+
+  static private boolean jj_3_35() {
+    if (jj_scan_token(LENGTH)) return true;
     return false;
   }
 
@@ -839,9 +828,9 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3_40() {
-    if (jj_scan_token(INT)) return true;
-    if (jj_scan_token(LSQUAREBRACKET)) return true;
+  static private boolean jj_3_34() {
+    if (jj_scan_token(NEW)) return true;
+    if (jj_3R_20()) return true;
     return false;
   }
 
@@ -850,8 +839,25 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
+  static private boolean jj_3_33() {
+    if (jj_scan_token(L_PARENTHESIS)) return true;
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
   static private boolean jj_3_3() {
     if (jj_3R_10()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_32() {
+    if (jj_scan_token(EXCLAMATION)) return true;
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_31() {
+    if (jj_scan_token(THIS)) return true;
     return false;
   }
 
@@ -861,24 +867,46 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3_39() {
-    if (jj_scan_token(NEW)) return true;
-    if (jj_3R_21()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_38() {
-    if (jj_scan_token(THIS)) return true;
-    return false;
-  }
-
-  static private boolean jj_3_37() {
+  static private boolean jj_3_30() {
     if (jj_scan_token(ID)) return true;
     return false;
   }
 
-  static private boolean jj_3_36() {
+  static private boolean jj_3_29() {
     if (jj_scan_token(FALSE)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_28() {
+    if (jj_scan_token(TRUE)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_18() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_27()) {
+    jj_scanpos = xsp;
+    if (jj_3_28()) {
+    jj_scanpos = xsp;
+    if (jj_3_29()) {
+    jj_scanpos = xsp;
+    if (jj_3_30()) {
+    jj_scanpos = xsp;
+    if (jj_3_31()) {
+    jj_scanpos = xsp;
+    if (jj_3_32()) {
+    jj_scanpos = xsp;
+    if (jj_3_33()) {
+    jj_scanpos = xsp;
+    if (jj_3_34()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
     return false;
   }
 
@@ -888,56 +916,54 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3_35() {
-    if (jj_scan_token(TRUE)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_17() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_34()) {
-    jj_scanpos = xsp;
-    if (jj_3_35()) {
-    jj_scanpos = xsp;
-    if (jj_3_36()) {
-    jj_scanpos = xsp;
-    if (jj_3_37()) {
-    jj_scanpos = xsp;
-    if (jj_3_38()) {
-    jj_scanpos = xsp;
-    if (jj_3_39()) return true;
-    }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3_34() {
+  static private boolean jj_3_27() {
     if (jj_scan_token(INTEGER_LITERAL)) return true;
     return false;
   }
 
-  static private boolean jj_3_33() {
-    if (jj_scan_token(ID)) return true;
-    if (jj_scan_token(L_PARENTHESIS)) return true;
+  static private boolean jj_3R_27() {
     return false;
   }
 
-  static private boolean jj_3R_20() {
+  static private boolean jj_3_26() {
+    if (jj_scan_token(LSQUAREBRACKET)) return true;
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_25() {
+    if (jj_scan_token(DOT)) return true;
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_24() {
+    if (jj_scan_token(LESS_THAN)) return true;
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_25() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_32()) {
+    if (jj_3_23()) {
     jj_scanpos = xsp;
-    if (jj_3_33()) return true;
+    if (jj_3_24()) {
+    jj_scanpos = xsp;
+    if (jj_3_25()) {
+    jj_scanpos = xsp;
+    if (jj_3_26()) {
+    jj_scanpos = xsp;
+    if (jj_3R_27()) return true;
+    }
+    }
+    }
     }
     return false;
   }
 
-  static private boolean jj_3_32() {
-    if (jj_scan_token(LENGTH)) return true;
+  static private boolean jj_3_23() {
+    if (jj_scan_token(AND)) return true;
     if (jj_3R_18()) return true;
     return false;
   }
@@ -953,121 +979,81 @@ public class Incognito implements IncognitoConstants {
     return false;
   }
 
-  static private boolean jj_3R_23() {
-    return false;
-  }
-
-  static private boolean jj_3_31() {
-    if (jj_scan_token(DOT)) return true;
-    if (jj_3R_20()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_30() {
-    if (jj_scan_token(LSQUAREBRACKET)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_18() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_29()) {
-    jj_scanpos = xsp;
-    if (jj_3_30()) {
-    jj_scanpos = xsp;
-    if (jj_3_31()) {
-    jj_scanpos = xsp;
-    if (jj_3R_23()) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3_29() {
-    if (jj_3R_19()) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_28() {
-    if (jj_scan_token(L_PARENTHESIS)) return true;
-    if (jj_3R_16()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_27() {
-    if (jj_scan_token(EXCLAMATION)) return true;
-    if (jj_3R_16()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_16() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_26()) {
-    jj_scanpos = xsp;
-    if (jj_3_27()) {
-    jj_scanpos = xsp;
-    if (jj_3_28()) return true;
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3_26() {
-    if (jj_3R_17()) return true;
+  static private boolean jj_3R_17() {
     if (jj_3R_18()) return true;
+    if (jj_3R_25()) return true;
     return false;
   }
 
-  static private boolean jj_3_25() {
-    if (jj_scan_token(STAR)) return true;
+  static private boolean jj_3R_26() {
     return false;
   }
 
-  static private boolean jj_3_24() {
-    if (jj_scan_token(MINUS)) return true;
-    return false;
-  }
-
-  static private boolean jj_3_23() {
-    if (jj_scan_token(PLUS)) return true;
+  static private boolean jj_3R_23() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_26()) return true;
+    }
     return false;
   }
 
   static private boolean jj_3_22() {
-    if (jj_scan_token(LESS_THAN)) return true;
+    if (jj_scan_token(STAR)) return true;
+    if (jj_3R_17()) return true;
     return false;
   }
 
-  static private boolean jj_3R_19() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_21()) {
-    jj_scanpos = xsp;
-    if (jj_3_22()) {
-    jj_scanpos = xsp;
-    if (jj_3_23()) {
-    jj_scanpos = xsp;
-    if (jj_3_24()) {
-    jj_scanpos = xsp;
-    if (jj_3_25()) return true;
-    }
-    }
-    }
-    }
+  static private boolean jj_3R_16() {
+    if (jj_3R_17()) return true;
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_24() {
     return false;
   }
 
   static private boolean jj_3_21() {
-    if (jj_scan_token(AND)) return true;
+    if (jj_scan_token(MINUS)) return true;
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_22() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_20()) {
+    jj_scanpos = xsp;
+    if (jj_3_21()) {
+    jj_scanpos = xsp;
+    if (jj_3R_24()) return true;
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3_20() {
+    if (jj_scan_token(PLUS)) return true;
+    if (jj_3R_16()) return true;
     return false;
   }
 
   static private boolean jj_3_13() {
     if (jj_3R_12()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15() {
+    if (jj_3R_16()) return true;
+    if (jj_3R_22()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_14() {
+    if (jj_scan_token(LSQUAREBRACKET)) return true;
+    if (jj_3R_15()) return true;
     return false;
   }
 
@@ -1096,7 +1082,7 @@ public class Incognito implements IncognitoConstants {
    private static void jj_la1_init_1() {
       jj_la1_1 = new int[] {};
    }
-  static final private JJCalls[] jj_2_rtns = new JJCalls[43];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[40];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -1301,7 +1287,7 @@ public class Incognito implements IncognitoConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[42];
+    boolean[] la1tokens = new boolean[44];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -1318,7 +1304,7 @@ public class Incognito implements IncognitoConstants {
         }
       }
     }
-    for (int i = 0; i < 42; i++) {
+    for (int i = 0; i < 44; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
@@ -1345,7 +1331,7 @@ public class Incognito implements IncognitoConstants {
 
   static private void jj_rescan_token() {
     jj_rescan = true;
-    for (int i = 0; i < 43; i++) {
+    for (int i = 0; i < 40; i++) {
     try {
       JJCalls p = jj_2_rtns[i];
       do {
@@ -1392,9 +1378,6 @@ public class Incognito implements IncognitoConstants {
             case 37: jj_3_38(); break;
             case 38: jj_3_39(); break;
             case 39: jj_3_40(); break;
-            case 40: jj_3_41(); break;
-            case 41: jj_3_42(); break;
-            case 42: jj_3_43(); break;
           }
         }
         p = p.next;
