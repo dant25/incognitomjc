@@ -100,163 +100,413 @@ TOKEN:
 |   < DIGIT: ["0"-"9"] >
 }
 
-void Goal():
-{}
+Program Goal():
 {
-	MainClass() (ClassDecl())* <EOF>
+	ClassDeclList classDeclList = new ClassDeclList();
+	ClassDecl classDecl;
+	MainClass mainclass;
+}
+{
+	mainclass = MainClass()
+	(
+		classDecl = ClassDecl() 	{ classDeclList.addElement(classDecl); }
+	)*
+	<EOF>
+	{ return new Program(mainclass, classDeclList); }
 }
 
-void MainClass():
-{}
+MainClass MainClass():
 {
-	<CLASS> <ID> <LCURLYBRACE>
-		<MAIN> <L_PARENTHESIS>
-			<STRING_ARRAY> <ID>
-		<R_PARENTHESIS> 
-		<LCURLYBRACE>
-			Statement()
-		<RCURLYBRACE>
+	Token t;
+	Identifier id1;
+	Identifier id2;
+	Statement statement;
+}
+{
+	<CLASS>
+	t = <ID>				{id1 = new Identifier(t.image);}
+	<LCURLYBRACE>
+	<MAIN>
+	<L_PARENTHESIS>
+	<STRING_ARRAY>
+	t = <ID>				{id2 = new Identifier(t.image);}
+	<R_PARENTHESIS> 
+	<LCURLYBRACE>
+	statement = Statement()
 	<RCURLYBRACE>
+	<RCURLYBRACE>
+	{ return new MainClass(id1, id2, statement); }
+}
+
+ClassDecl ClassDecl():
+{
+	VarDecl varDecl;
+	VarDeclList varDeclList = new VarDeclList();
+	MethodDecl methodDecl;
+	MethodDeclList methodDeclList = new MethodDeclList();
+	Token t;
+	Identifier id1;
+	Identifier id2 = null;
+	ClassDecl classDecl;
+	boolean extended = false;
+}
+{
+	<CLASS>
+	t = <ID>		{ id1 = new Identifier(t.image); }
+	(
+		<EXTENDS>
+		t = <ID>	{ id2 = new Identifier(t.image);
+					  extended = true; }
+	)?
+	<LCURLYBRACE>
+	(
+		varDecl = VarDecl()		{ varDeclList.addElement(varDecl); }
+	)*
+	(
+		methodDecl = MethodDecl()		{ methodDeclList.addElement(methodDecl); }
+	)*
+	<RCURLYBRACE>
+	{
+		if(extended)
+			classDecl = new ClassDeclExtends(id1, id2, varDeclList, methodDeclList);
+		else
+			classDecl = new ClassDeclSimple(id1, varDeclList, methodDeclList);
+			
+		return classDecl;
+	}
+}
+
+VarDecl VarDecl():
+{
+	Token t;
+	Identifier id;
+	Type type;
+}
+{
+	type = Type()
+	t = <ID>		{ id = new Identifier(t.image); }
+	<SEMICOLON>
+	{ return new VarDecl(type, id); }
+}
+
+MethodDecl MethodDecl():
+{
+	Type type;
+	Token t;
+	Identifier id;
+	FormalList formalList;
+	VarDeclList varDeclList = new VarDeclList();
+	VarDecl varDecl;
+	StatementList statementList = new StatementList();
+	Statement statement;
+	Exp exp;
+}
+{
+	<PUBLIC> 
+	type = Type() 
+	t = <ID>						{ id = new Identifier(t.image); }  
+	<L_PARENTHESIS>
+	formalList = FormalList()		
+	<R_PARENTHESIS> 
+	<LCURLYBRACE>
+	(
+		varDecl = VarDecl()			{ varDeclList.addElement(varDecl); }
+	)* 
+	(
+		statement = Statement()		{ statementList.addElement(statement); }
+	)* 
+	<RETURN> 
+	exp = Exp() 
+	<SEMICOLON>
+	<RCURLYBRACE>
+	{ return new MethodDecl(type, id, formalList, varDeclList, statementList, exp); }
+}
+
+FormalList FormalList():
+{
+	Token t;
+	Identifier id;
+	Type type;
+	FormalList formalList = new FormalList();
+	Formal formal;
+}
+{
+	type = Type()
+	t = <ID>
+	{
+		id = new Identifier(t.image);
+		formalList.addElement(new Formal(type, id));
+	}
+	(
+		formal = FormalRest()		{formalList.addElement(formal);}
+	)*
+	{ return formalList; }
 	
+|	{ return formalList; }
 }
 
-void ClassDecl():
-{}
+Formal FormalRest():
 {
-<CLASS> <ID> (<EXTENDS> <ID>)? <LCURLYBRACE>
-		( VarDecl() )*
-		( MethodDecl() )*
+	Token t;
+	Identifier id;
+	Type type;
+}
+{
+	<COMMA>
+	type = Type()
+	t = <ID>
+	{
+		id = new Identifier(t.image);
+		return new Formal(type, id);
+	}
+}
+
+Type Type():
+{
+	Type type;
+	Token t;
+}
+{
+	<INT_ARRAY>		{ return new IntArrayType(); }
+|	<BOOLEAN>		{ return new BooleanType(); }
+|	<INT>			{ return new IntegerType(); }
+|	t = <ID>		{ return new IdentifierType(t.image); }
+}
+
+
+Statement Statement():
+{
+	Statement statement;
+	StatementList statementList = new StatementList();
+	Exp exp = null;
+	Exp exp2;
+	Statement statement2;
+	boolean arrayassign = false;
+	Token t;
+}
+{
+	<LCURLYBRACE>
+	(
+		statement = Statement()		{ statementList.addElement(statement); }
+	)* 
 	<RCURLYBRACE>
+	{ return new Block(statementList); }
+	
+|	<IF>
+	<L_PARENTHESIS>
+	exp = Exp()
+	<R_PARENTHESIS>
+	statement = Statement()
+	<ELSE>
+	statement2 = Statement()
+	{ return new If(exp, statement, statement2); }
+	
+|	<WHILE>
+	<L_PARENTHESIS>
+	exp = Exp()
+	<R_PARENTHESIS>
+	statement = Statement()
+	{ return new While(exp, statement); }
+	
+|	<PRINT>
+	<L_PARENTHESIS>
+	exp = Exp()
+	<R_PARENTHESIS>
+	<SEMICOLON>
+	{ return new Print(exp); }
+	
+|	t = <ID>
+	(
+		<LSQUAREBRACKET>
+		exp = Exp()
+		<RSQUAREBRACKET>
+		{ arrayassign = true; }
+	)?
+	<ASSIGNEQUAL>
+	exp2 = Exp()
+	<SEMICOLON>
+	{
+		if(arrayassign)
+			return new ArrayAssign(new Identifier(t.image), exp, exp2);
+		else
+			return new Assign(new Identifier(t.image), exp2);
+	}
 }
 
-void VarDecl():
-{}
+Exp Exp():
 {
-	Type() <ID> <SEMICOLON>
+	Exp exp;
 }
-
-void MethodDecl():
-{}
 {
-	<PUBLIC> Type() <ID>  <L_PARENTHESIS>
-		FormalList()		
-	<R_PARENTHESIS> <LCURLYBRACE>
-		(VarDecl())* (Statement())* <RETURN> Exp() <SEMICOLON>
-	<RCURLYBRACE>
+	exp = Term()
+	exp = ExpPrime(exp)
+	{
+		return exp;
+	}
 }
 
-void FormalList():
-{}
+Exp ExpPrime(Exp exp):
 {
-	Type() <ID> (FormalRest())*
-|	{}
+	Exp exp2;
 }
-
-void FormalRest():
-{}
 {
-	<COMMA> Type() <ID>
+	<PLUS>
+	exp2 = Term()
+	exp2 = ExpPrime(exp2)
+	{ return new Plus(exp, exp2); }
+	
+|	<MINUS>
+	exp2 = Term()
+	exp2 = ExpPrime(exp2)
+	{ return new Minus(exp, exp2); }
+	
+|	{ return exp; }
 }
 
-void Type():
-{}
+Exp Term():
 {
-	<INT_ARRAY>
-|	<BOOLEAN>
-|	<INT>	
-|	<ID>
+	Exp exp;
 }
-
-
-void Statement():
-{}
 {
-	<LCURLYBRACE> (Statement())* <RCURLYBRACE>
-|	<IF> <L_PARENTHESIS> Exp() <R_PARENTHESIS> Statement() <ELSE> Statement()
-|	<WHILE> <L_PARENTHESIS> Exp() <R_PARENTHESIS> Statement()
-|	<PRINT> <L_PARENTHESIS> Exp() <R_PARENTHESIS> <SEMICOLON>
-|	<ID> (<LSQUAREBRACKET> Exp() <RSQUAREBRACKET>)? <ASSIGNEQUAL> Exp() <SEMICOLON>
+	exp = Term2()
+	exp = TermPrime(exp)
+	{
+		return exp;
+	}
 }
 
-void Exp():
-{}
+Exp TermPrime(Exp exp):
 {
-	Term() ExpPrime()
+	Exp exp2;
 }
-
-void ExpPrime():
-{}
 {
-	<PLUS> Term() ExpPrime()
-|	<MINUS> Term() ExpPrime()
-|	{}
+	<STAR>
+	exp2 = Term2()
+	exp2 = TermPrime(exp2)
+	{ return new Times(exp, exp2); }
+	
+|	{ return exp; }
 }
 
-void Term():
-{}
+Exp Term2():
 {
-	Term2() TermPrime()
+	Exp exp;
 }
-
-void TermPrime():
-{}
 {
-	<STAR> Term2() TermPrime()
-|	{}
+	exp = Fat()
+	exp = Term2Prime(exp)
+	{ return exp; }
 }
 
-void Term2():
-{}
+Exp Term2Prime(Exp exp):
 {
-	Fat() Term2Prime()
+	Exp exp2;
 }
-
-void Term2Prime():
-{}
 {
-	<AND> Fat() Term2Prime()
-|	<LESS_THAN> Fat() Term2Prime()
-|	<DOT> Fat2()
-|	<LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
-|	{}
+	<AND>
+	exp2 = Fat()
+	exp2 = Term2Prime(exp2)
+	{ return new And(exp, exp2); }
+	
+|	<LESS_THAN>
+	exp2 = Fat()
+	exp2 = Term2Prime(exp2)
+	{ return new LessThan(exp, exp2); }
+	
+|	<DOT>
+	exp = Fat2(exp)
+	{ return exp; }
+	
+|	<LSQUAREBRACKET>
+	exp2 = Exp()
+	<RSQUAREBRACKET>
+	{ return new ArrayLookup(exp, exp2); }
+
+|	{ return exp; }
 }
 
-void Fat():
-{}
+Exp Fat():
 {
-	<INTEGER_LITERAL>
-|	<TRUE>
-|	<FALSE>
-|	<ID>
-|	<THIS>
-|	<EXCLAMATION> Exp()
-|	<L_PARENTHESIS> Exp() <R_PARENTHESIS>
-|	<NEW> Fat3()
+	Exp exp;
+	Token t;
+}
+{
+	t = <INTEGER_LITERAL>	{ return new IntegerLiteral(Integer.parseInt(t.image)); }
+	
+|	<TRUE> 					{ return new True(); }
+
+|	<FALSE>					{ return new False(); }
+
+|	t = <ID>				{ return new IdentifierExp(t.image); }
+
+|	<THIS>					{ return new This(); }
+
+|	<EXCLAMATION>
+	exp = Exp()				{ return new Not(exp); }
+		
+|	<L_PARENTHESIS>
+	exp = Exp()
+	<R_PARENTHESIS>			{ return exp; }
+
+|	<NEW>
+	exp = Fat3()			{ return exp; }
 }
 
-void Fat2():
-{}
+Exp Fat2(Exp exp):
+{
+	Token t;
+	ExpList expList;
+}
 {
 	<LENGTH>
-|	<ID> <L_PARENTHESIS> ExpList() <R_PARENTHESIS>
+	{ return new ArrayLength(exp); }
+	
+|	t = <ID>
+	<L_PARENTHESIS>
+	expList = ExpList()
+	<R_PARENTHESIS>
+	{ return new Call(exp, new Identifier(t.image), expList); }
 }
 
-void Fat3():
-{}
+Exp Fat3():
 {
-	<INT> <LSQUAREBRACKET> Exp() <RSQUAREBRACKET>
-|	<ID> <L_PARENTHESIS> <R_PARENTHESIS>
+	Exp exp;
+	Token t;
+}
+{
+	<INT>
+	<LSQUAREBRACKET>
+	exp = Exp()
+	<RSQUAREBRACKET>
+	{ return new NewArray(exp); }
+	
+|	t = <ID>
+	<L_PARENTHESIS>
+	<R_PARENTHESIS>
+	{ return new NewObject(new Identifier(t.image)); }
 }
 
-void ExpList():
-{}
+ExpList ExpList():
 {
-	Exp() (ExpRest())*
-|	{}
+	Exp exp;
+	ExpList expList = new ExpList();
+}
+{
+	exp = Exp()				{ expList.addElement(exp); }
+	(
+		exp = ExpRest()		{ expList.addElement(exp); }
+	)*
+	{ return expList; }
+	
+|	{ return expList; }
 }
 
-void ExpRest():
-{}
+Exp ExpRest():
 {
-    <COMMA> Exp()
+	Exp exp;
+}
+{
+    <COMMA>
+    exp = Exp()
+    { return exp; }
 }
