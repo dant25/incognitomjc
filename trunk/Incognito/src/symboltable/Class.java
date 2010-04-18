@@ -8,6 +8,7 @@ public class Class{
 	private String id;
 	private Hashtable<String, String> fields;
 	private ArrayList<Method> methods;
+	private Method current_method;
 	
 	public Class(String id_){
 		id = id_;
@@ -21,7 +22,7 @@ public class Class{
 	
 	public boolean addMethods(Method method){
 		for(int i = 0; i < methods.size(); i++){
-			if(methods.get(i).getId().equals(method.getId()) && methods.get(i).getType().equals(method.getType()))
+			if(methods.get(i).getId().equals(method.getId()))
 			{
 				return false;
 			}
@@ -33,5 +34,20 @@ public class Class{
 	
 	public String getId(){
 		return id;
+	}
+	
+	public Method getMethod(String method_name){
+		for(int i = 0; i < methods.size(); i++){
+			if(methods.get(i).getId().equals(method_name)){
+				current_method = methods.get(i);
+				return current_method;
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getFieldType(String id){
+		return fields.get(id);
 	}
 }
