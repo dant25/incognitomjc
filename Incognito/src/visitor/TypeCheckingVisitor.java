@@ -204,19 +204,21 @@ public class TypeCheckingVisitor implements TypeVisitor {
 	// Identifier i;
 	// Exp e;
 	public Type visit(Assign n) {
-		if(n.i.accept(this) instanceof IntegerType){
+		Type identifier_type = n.i.accept(this);
+		
+		if(identifier_type instanceof IntegerType){
 			if(!(n.e.accept(this) instanceof IntegerType))
 				System.out.println("Erro! - Expressão não é do tipo int.");
 		}
-		else if(n.i.accept(this) instanceof BooleanType){
+		else if(identifier_type instanceof BooleanType){
 			if(!(n.e.accept(this) instanceof BooleanType))
 				System.out.println("Erro! - Expressão não é do tipo boolean.");
 		}
-		else if(n.i.accept(this) instanceof IdentifierType){
+		else if(identifier_type instanceof IdentifierType){
 			if(!(n.e.accept(this) instanceof IdentifierType))
 				System.out.println("Erro! - Os tipos não são compatíveis.");
 			else{
-			if(!(((IdentifierType)n.e.accept(this)).s.equals(((IdentifierType)n.i.accept(this)).s)))
+			if(!(((IdentifierType)n.e.accept(this)).s.equals(((IdentifierType)identifier_type).s)))
 				System.out.println("Erro! - Os tipos não são compatíveis.");
 			}
 		}
@@ -363,14 +365,16 @@ public class TypeCheckingVisitor implements TypeVisitor {
 			}
 		}
 	
-		if(method.getReturnType().equals("int"))
+		String method_type = method.getReturnType();
+		
+		if(method_type.equals("int"))
 			return new IntegerType();
-		if(method.getReturnType().equals("int[]"))
+		if(method_type.equals("int[]"))
 			return new IntArrayType();
-		if(method.getReturnType().equals("boolean"))
+		if(method_type.equals("boolean"))
 			return new BooleanType();
 		else
-			return new IdentifierType(method.getReturnType());
+			return new IdentifierType(method_type);
 	}
 
 	// int i;
